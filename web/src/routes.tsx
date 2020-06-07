@@ -3,14 +3,16 @@ import { Route, BrowserRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
 import CreatePoint from './pages/CreatePoint';
+import Points from './pages/Points';
 
-const Routes = () => {
+const Routes: React.FC = () => {
   return (
     <BrowserRouter>
-      <Route component={Home} path="/" exact />
-      <Route component={CreatePoint} path="/create-point" />
+      <Route path="/" exact component={Home} />
+      <Route path="/create-point" component={CreatePoint} />
+      <Route path="/points" component={Points} />
     </BrowserRouter>
-  )
-}
+  );
+};
 
 export default Routes;

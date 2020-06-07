@@ -5,6 +5,7 @@ import { LeafletMouseEvent } from 'leaflet';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 
 import Dropzone from '../../components/Dropzone';
+import ToastSuccess from '../../components/ToastSuccess';
 
 import axios from 'axios';
 import api from '../../services/api';
@@ -46,6 +47,7 @@ const CreatePoint = () => {
   const [selectedItem, setSelectedItem] = useState<number[]>([]);
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const history = useHistory();
 
@@ -161,12 +163,17 @@ const CreatePoint = () => {
     // console.log(data);
     await api.post('points', data);
 
-    alert('Ponto de coleta criado!');
-    history.push('/');
+    setIsSuccess(true);
+
+    setTimeout(() => {
+      history.push('/points');
+      setIsSuccess(false);
+    }, 2000);
   }
 
   return (
     <div id="page-create-point">
+      { isSuccess && <ToastSuccess /> }
       <header>
         <img src={logo} alt="" />
         <Link to="/">
