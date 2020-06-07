@@ -1,45 +1,56 @@
 import express from 'express';
-import { celebrate, Joi } from 'celebrate'
-
 import multer from 'multer';
-import multerConfig from './config/multer'
+import { celebrate, Joi } from 'celebrate';
+
+import multerConfig from './config/multer';
 
 import PointsController from './controllers/PointsController';
 import ItemsController from './controllers/ItemsController';
+import PointsFilterController from './controllers/PointsFilterController';
 
 const routes = express.Router();
 const upload = multer(multerConfig);
 
 const pointsController = new PointsController();
-const intemsController = new ItemsController();
+const itemsController = new ItemsController();
+const pointsFilterController = new PointsFilterController();
 
-routes.get('/items', intemsController.index);
+routes.get('/', (request, response) => {
+  return response.json({
+    application: 'Ecoleta API',
+    developer: 'Thayana Mamoré',
+    github: 'https://github.com/thauska',
+  });
+});
 
-routes.get('/points', pointsController.index);
-routes.get('/points/:id', pointsController.show)
+routes.get('/items', itemsController.index);
 
 routes.post(
-  '/points', 
-  upload.single('image'), 
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().required().email(),
-      whatsapp: Joi.number().required(),
-      latitude: Joi.number().required(),
-      longitude: Joi.number().required(),
-      city: Joi.string().required(),
-      uf: Joi.string().required().max(2),
-      items: Joi.string().required(),
-    })
-  }, {
-    abortEarly: false,
-  }), 
-  pointsController.create
+  '/points',
+  upload.single('image'),
+  celebrate(
+    {
+      body: Joi.object().keys({
+        name: Joi.string().required(),
+        email: Joi.string().required(),
+        whatsapp: Joi.required(),
+        latitude: Joi.required(),
+        longitude: Joi.required(),
+        city: Joi.string().required(),
+        uf: Joi.string().required().max(2),
+        items: Joi.string().required(),
+      }),
+    },
+    { abortEarly: false },
+  ),
+  pointsController.create,
 );
 
-export default routes;
+routes.get('/points', pointsController.index);
+routes.get('/points/:id', pointsController.show);
+routes.put('/points/:id', pointsController.update);
+routes.delete('/points/:id', pointsController.delete);
 
-// Tipos de estrutura de código:
-// Service Pattern
-// Repository Pattern (Data Mapper)
+routes.get('/points-filter', pointsFilterController.show);
+
+export default routes;

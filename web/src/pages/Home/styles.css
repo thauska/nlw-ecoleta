@@ -26,7 +26,11 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
+}
+
+#page-home .content main .points {
+  margin-top: 15px;
 }
 
 #page-home .content main h1 {
